@@ -21,15 +21,15 @@ type Memory struct {
 
 func (m *Memory) Get(key int) (interface{}, error) {
 	m.lock.Lock()
-
 	result, exists := m.cache[key]
+	m.lock.Unlock()
 
 	if !exists {
+		m.lock.Lock()
 		result.value, result.err = m.f(key)
 		m.cache[key] = result
+		m.lock.Unlock()
 	}
-
-        m.lock.Unlock()
 
 	return result.value, result.err
 }
