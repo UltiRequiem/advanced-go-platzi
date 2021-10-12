@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type MemoryFunc func(key int) (interface{}, error)
 
@@ -10,18 +13,23 @@ type MemoryFuncResult struct {
 }
 
 type Memory struct {
-	f MemoryFunc
+	f    MemoryFunc
+	lock sync.Mutex
 
 	cache map[int]MemoryFuncResult
 }
 
 func (m *Memory) Get(key int) (interface{}, error) {
+	m.lock.Lock()
+
 	result, exists := m.cache[key]
 
 	if !exists {
 		result.value, result.err = m.f(key)
 		m.cache[key] = result
 	}
+
+        m.lock.Unlock()
 
 	return result.value, result.err
 }
@@ -48,10 +56,20 @@ func Fibonacci(n int) int {
 func main() {
 	cache := NewCache(GetFibonacci)
 
-	fibo := []int{1, 2, 3, 4, 555, 555, 67}
+	fibo := []int{1, 2, 3, 4, 555, 555, 67, 99999999999, 333333, 4444556}
+
+	var wg sync.WaitGroup
 
 	for _, n := range fibo {
-		value, _ := cache.Get(n)
-                fmt.Println(value)
+
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+			value, _ := cache.Get(index)
+			fmt.Println(value)
+		}(n)
+
 	}
+
+	wg.Wait()
 }
