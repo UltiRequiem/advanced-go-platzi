@@ -48,7 +48,8 @@ func (i *Item) broadcast() {
 
 func NewItem(name string) *Item {
 	return &Item{
-		name: name,
+		name:      name,
+		available: false,
 	}
 }
 
@@ -59,15 +60,11 @@ func main() {
 	firstObserver := &EmailClient{"12b"}
 	secondObserver := &EmailClient{"34dc"}
 
-        nvidiaItem.register(firstObserver)
-        nvidiaItem.register(secondObserver)
+	nvidiaItem.register(firstObserver)
+	nvidiaItem.register(secondObserver)
 
-        nvidiaItem.UpdateAvailable()
+	nvidiaItem.UpdateAvailable()
 
-        nvidiaItem.UpdateAvailable()
-
-
-
-
+	nvidiaItem.UpdateAvailable()
 
 }
