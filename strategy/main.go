@@ -4,7 +4,7 @@ import "fmt"
 
 type PasswordProtector struct {
 	username      string
-	passwordName      string
+	passwordName  string
 	hashAlgorithm HashAlgorithm
 }
 
@@ -24,7 +24,13 @@ type HashAlgorithm interface {
 type SHA struct{}
 
 func (SHA) Hash(p *PasswordProtector) {
-	fmt.Printf("Hashing using SHA for %s", p.passwordName)
+	fmt.Printf("Hashing using SHA for %s.\n", p.passwordName)
+}
+
+type MD5 struct{}
+
+func (MD5) Hash(p *PasswordProtector) {
+	fmt.Printf("Hashing using MD5 for %s.\n", p.passwordName)
 }
 
 func NewPasswordProtector(username string, password string, hash HashAlgorithm) *PasswordProtector {
@@ -32,5 +38,17 @@ func NewPasswordProtector(username string, password string, hash HashAlgorithm) 
 }
 
 func main() {
+
+	sha := &SHA{}
+
+	md5 := &MD5{}
+
+	pwdProtector := NewPasswordProtector("zero", "me@ultirequiem.com", sha)
+
+	pwdProtector.Hash()
+
+	pwdProtector.SetHashAlgorithm(md5)
+
+	pwdProtector.Hash()
 
 }
