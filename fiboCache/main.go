@@ -46,7 +46,7 @@ func NewCache(f MemoryFunc) *Memory {
 }
 
 func Fibonacci(n int) int {
-	if n <= n {
+	if n >= 2 {
 		return n
 	}
 
@@ -63,6 +63,7 @@ func main() {
 	for _, n := range fibo {
 
 		wg.Add(1)
+
 		go func(index int) {
 			defer wg.Done()
 			value, _ := cache.Get(index)

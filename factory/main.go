@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-type Iproduct interface {
+type IProduct interface {
 	setStock(stock int)
 	getStock() int
 	setName(name string)
@@ -38,19 +38,19 @@ type Desktop struct {
 	Computer
 }
 
-func newLaptop() Iproduct {
+func newLaptop() IProduct {
 	return &Laptop{
 		Computer{"Laptop 234", 45},
 	}
 }
 
-func newDesktop() Iproduct {
-	return &Laptop{
+func newDesktop() IProduct {
+	return &Desktop{
 		Computer{"Desktop 23444", 445},
 	}
 }
 
-func GetComputerFactory(computerType string) (Iproduct, error) {
+func GetComputerFactory(computerType string) (IProduct, error) {
 	switch computerType {
 	case "laptop":
 		return newLaptop(), nil
@@ -61,7 +61,7 @@ func GetComputerFactory(computerType string) (Iproduct, error) {
 	return nil, fmt.Errorf("Invalid Computer Type")
 }
 
-func printNameAndStock(p Iproduct) {
+func printNameAndStock(p IProduct) {
 	fmt.Printf("Product Name: %s, with Stock: %d. \n", p.getName(), p.getStock())
 }
 
@@ -71,5 +71,4 @@ func main() {
 
         printNameAndStock(myDesktop)
         printNameAndStock(myLaptop)
-
 }

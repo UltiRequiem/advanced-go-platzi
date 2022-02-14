@@ -50,5 +50,4 @@ func main() {
 	pwdProtector.SetHashAlgorithm(md5)
 
 	pwdProtector.Hash()
-
 }

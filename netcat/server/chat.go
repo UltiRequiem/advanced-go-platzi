@@ -11,9 +11,9 @@ import (
 type Client chan<- string
 
 var (
-	incommingClients = make(chan Client)
-	leavingClients   = make(chan Client)
-	messages         = make(chan string)
+	incomingClients = make(chan Client)
+	leavingClients  = make(chan Client)
+	messages        = make(chan string)
 
 	host = flag.String("host", "localhost", "The Host")
 	port = flag.Int("port", 3000, "The Port")
@@ -32,7 +32,7 @@ func HandleConnection(conn net.Conn) {
 
 	messages <- fmt.Sprintf("New client is here: %s\n", clientName)
 
-	incommingClients <- message
+	incomingClients <- message
 
 	inputMessage := bufio.NewScanner(conn)
 
@@ -61,7 +61,7 @@ func Broadcast() {
 			for client := range clients {
 				client <- message
 			}
-		case newClient := <-incommingClients:
+		case newClient := <-incomingClients:
 			clients[newClient] = true
 		case leavingClient := <-leavingClients:
 			delete(clients, leavingClient)
@@ -84,9 +84,9 @@ func main() {
 
 		if err != nil {
 			log.Println(err)
-                        continue
+			continue
 		}
 
-                go HandleConnection(conn)
+		go HandleConnection(conn)
 	}
 }
